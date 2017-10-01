@@ -42,8 +42,7 @@ function update(){
       var y = convnetjs.randi(0, H);
       var ix = ((W*y)+x)*4;
       var r = [p[ix]/255.0, p[ix+1]/255.0, p[ix+2]/255.0]; // r g b
-      v.w[0] = binary(x);
-      v.w[1] = binary(y);
+      v.w = [].concat(binary(x), binary(y));
       var stats = trainer.train(v, r);
       loss += stats.loss;
       lossi += 1;
@@ -79,9 +78,8 @@ function draw() {
   var g = nn_ctx.getImageData(0, 0, W, H);
   var v = new convnetjs.Vol(10, 1, 2);
   for(var x=0;x<W;x++) {
-    v.w[0] = binary(x);
     for(var y=0;y<H;y++) {
-      v.w[1] = binary(y);
+      v.w = [].concat(binary(x), binary(y));
       var ix = ((W*y)+x)*4;
       var r = net.forward(v);
       g.data[ix+0] = Math.floor(255*r.w[0]);
