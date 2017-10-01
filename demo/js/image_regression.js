@@ -63,7 +63,7 @@ function binary(number){
   var string = number.toString(2).padStart(9, "0");
   var bits = [];
   for(var i=0; i<string.length; i++){
-    bits[i] = parseInt(string[i]-1)/2.0;
+    bits[i] = parseInt(string[i]-0.5);
   }
   return bits;
 }
