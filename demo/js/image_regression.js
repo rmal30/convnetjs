@@ -94,8 +94,8 @@ function draw() {
 }
 
 function tick() {
-  update();
-  draw();
+ // update();
+ // draw();
   counter += 1;
 }
 
