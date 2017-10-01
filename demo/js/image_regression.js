@@ -133,7 +133,7 @@ $(function() {
       oridata = ori_ctx.getImageData(0, 0, sz, sz); // grab the data pointer. Our dataset.
 
       // start the regression!
-      setInterval(tick, 1);
+      //setInterval(tick, 1);
     }
     image.src = "imgs/cat.jpg";
 
