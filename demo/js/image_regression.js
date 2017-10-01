@@ -4,7 +4,7 @@ var layer_defs, net, trainer;
 
 // create neural net
 var t = "layer_defs = [];\n\
-layer_defs.push({type:'input', out_sx:1, out_sy:1, out_depth:2}); // 2 inputs: x, y \n\
+layer_defs.push({type:'input', out_sx:10, out_sy:2, out_depth:2}); // 2 inputs: x, y \n\
 layer_defs.push({type:'fc', num_neurons:20, activation:'relu'});\n\
 layer_defs.push({type:'fc', num_neurons:20, activation:'relu'});\n\
 layer_defs.push({type:'fc', num_neurons:20, activation:'relu'});\n\
@@ -31,7 +31,7 @@ function update(){
 
   var p = oridata.data;
 
-  var v = new convnetjs.Vol(1,1,2);
+  var v = new convnetjs.Vol(10,1,2);
   var loss = 0;
   var lossi = 0;
   var N = batches_per_iteration;
@@ -42,8 +42,8 @@ function update(){
       var y = convnetjs.randi(0, H);
       var ix = ((W*y)+x)*4;
       var r = [p[ix]/255.0, p[ix+1]/255.0, p[ix+2]/255.0]; // r g b
-      v.w[0] = (x-W/2)/W;
-      v.w[1] = (y-H/2)/H;
+      v.w[0] = binary(x);
+      v.w[1] = binary(y);
       var stats = trainer.train(v, r);
       loss += stats.loss;
       lossi += 1;
@@ -60,7 +60,14 @@ function update(){
   t += 'iteration: ' + counter;
   $("#report").html(t);
 }
-
+function binary(number){
+  var string = number.toString(2).padStart(10, "0");
+  var bits = [];
+  for(var i=0; i<string.length; i++){
+    bits[i] = parseInt(string[i]);
+  }
+  return bits;
+}
 function draw() {
   if(counter % mod_skip_draw !== 0) return;
 
@@ -70,12 +77,11 @@ function draw() {
   var H = nn_canvas.height;
 
   var g = nn_ctx.getImageData(0, 0, W, H);
-  var v = new convnetjs.Vol(1, 1, 2);
+  var v = new convnetjs.Vol(10, 1, 2);
   for(var x=0;x<W;x++) {
-    v.w[0] = (x-W/2)/W;
+    v.w[0] = binary(x);
     for(var y=0;y<H;y++) {
-      v.w[1] = (y-H/2)/H;
-
+      v.w[1] = binary(y);
       var ix = ((W*y)+x)*4;
       var r = net.forward(v);
       g.data[ix+0] = Math.floor(255*r.w[0]);
