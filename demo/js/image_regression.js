@@ -59,7 +59,7 @@ function digital(arr){
   for(var i=0; i<arr.length; i++){
     total = total<<1;
     if(arr[i]>=0.5){
-      total+=arr[i];
+      total++;
     }
   }
   return total;
