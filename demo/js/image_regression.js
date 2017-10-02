@@ -87,9 +87,9 @@ function draw() {
       v.w = [].concat(binary(x), binary(y));
       var ix = ((W*y)+x)*4;
       var r = net.forward(v);
-      g.data[ix+0] = digital(r.w.slice(0, 8)));
-      g.data[ix+1] = digital(r.w.slice(8, 16)));
-      g.data[ix+2] = digital(r.w.slice(16, 24)));
+      g.data[ix+0] = digital(r.w.slice(0, 8));
+      g.data[ix+1] = digital(r.w.slice(8, 16));
+      g.data[ix+2] = digital(r.w.slice(16, 24));
       g.data[ix+3] = 255; // alpha...
     }
   }
