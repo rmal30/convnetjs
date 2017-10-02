@@ -49,7 +49,7 @@ function update(){
   else smooth_loss = 0.99*smooth_loss + 0.01*loss;
 
   var t = '';
-  t += 'loss: ' + smooth_loss;
+  t += 'loss: ' + loss;
   t += '<br>'
   t += 'iteration: ' + counter;
   $("#report").html(t);
