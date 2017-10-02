@@ -36,8 +36,8 @@ function update(){
       var x = convnetjs.randi(0, W);
       var y = convnetjs.randi(0, H);
       var ix = ((W*y)+x)*4;
-      var r = [].concat(binary(p[ix]), binary(p[ix+1]), binary(p[ix+2])); // r g b
-      v.w = [].concat(binary(x), binary(y));
+      var r = [].concat(binary(p[ix], 1), binary(p[ix+1], 1), binary(p[ix+2], 1)); // r g b
+      v.w = [].concat(binary(x,0), binary(y,0));
       var stats = trainer.train(v, r);
       loss += stats.loss;
       lossi += 1;
@@ -58,17 +58,17 @@ function digital(arr){
   var total = 0;
   for(var i=0; i<arr.length; i++){
     total = total<<1;
-    if(arr[i]>0){
+    if(arr[i]>=0.5){
       total+=arr[i];
     }
   }
   return total;
 }
-function binary(number){
+function binary(number, offset){
   var string = number.toString(2).padStart(9, "0");
   var bits = [];
   for(var i=0; i<string.length; i++){
-    bits[i] = string[i]-0.5;
+    bits[i] = string[i]-0.5+offset;
   }
   return bits;
 }
@@ -84,7 +84,7 @@ function draw() {
   var v = new convnetjs.Vol(9, 1, 2);
   for(var x=0;x<W;x++) {
     for(var y=0;y<H;y++) {
-      v.w = [].concat(binary(x), binary(y));
+      v.w = [].concat(binary(x,0), binary(y,0));
       var ix = ((W*y)+x)*4;
       var r = net.forward(v);
       g.data[ix+0] = digital(r.w.slice(0, 8));
