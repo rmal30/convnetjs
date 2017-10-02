@@ -44,12 +44,12 @@ function update(){
     }
   }
   loss /= lossi;
-/*
+
   if(counter === 0) smooth_loss = loss;
   else smooth_loss = 0.99*smooth_loss + 0.01*loss;
-*/
+
   var t = '';
-  t += 'loss: ' + loss;
+  t += 'loss: ' + smooth_loss;
   t += '<br>'
   t += 'iteration: ' + counter;
   $("#report").html(t);
@@ -59,7 +59,7 @@ function digital(arr){
   for(var i=0; i<arr.length; i++){
     total = total<<1;
     if(arr[i]>0){
-      total+=arr[i]
+      total+=arr[i];
     }
   }
   return total;
