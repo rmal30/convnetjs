@@ -68,7 +68,7 @@ function analog_input(number){
   var string = number.toString(2).padStart(9, "0");
   var bits = [];
   for(var i=0; i<string.length; i++){
-    bits[i] = string[i]-0.5;
+    bits[i] = (string[i]-0.5)*1.4;
   }
   return bits;
 }
