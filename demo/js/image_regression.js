@@ -77,7 +77,7 @@ function analog_output(number){
   var string = number.toString(2).padStart(8, "0");
   var bits = [];
   for(var i=0; i<string.length; i++){
-    bits[i] = string[i]/2.0 + 0.25;
+    bits[i] = string[i];
   }
   return bits;
 }
