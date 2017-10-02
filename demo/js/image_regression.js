@@ -5,14 +5,9 @@ var layer_defs, net, trainer;
 // create neural net
 var t = "layer_defs = [];\n\
 layer_defs.push({type:'input', out_sx:9, out_sy:1, out_depth:2}); // 2 inputs: x, y \n\
-layer_defs.push({type:'fc', num_neurons:20, activation:'relu'});\n\
-layer_defs.push({type:'fc', num_neurons:20, activation:'relu'});\n\
-layer_defs.push({type:'fc', num_neurons:20, activation:'relu'});\n\
-layer_defs.push({type:'fc', num_neurons:20, activation:'relu'});\n\
-layer_defs.push({type:'fc', num_neurons:20, activation:'relu'});\n\
-layer_defs.push({type:'fc', num_neurons:20, activation:'relu'});\n\
-layer_defs.push({type:'fc', num_neurons:20, activation:'relu'});\n\
-layer_defs.push({type:'regression', num_neurons:3}); // 3 outputs: r,g,b \n\
+layer_defs.push({type:'fc', num_neurons:18, activation:'relu'});\n\
+layer_defs.push({type:'fc', num_neurons:64, activation:'relu'});\n\
+layer_defs.push({type:'regression', num_neurons:24}); // 3 outputs: r,g,b \n\
 \n\
 net = new convnetjs.Net();\n\
 net.makeLayers(layer_defs);\n\
@@ -41,7 +36,7 @@ function update(){
       var x = convnetjs.randi(0, W);
       var y = convnetjs.randi(0, H);
       var ix = ((W*y)+x)*4;
-      var r = [p[ix]/255.0, p[ix+1]/255.0, p[ix+2]/255.0]; // r g b
+      var r = [].concat(binary(p[ix]), binary(p[ix+1]), binary(p[ix+2])); // r g b
       v.w = [].concat(binary(x), binary(y));
       var stats = trainer.train(v, r);
       loss += stats.loss;
@@ -49,15 +44,25 @@ function update(){
     }
   }
   loss /= lossi;
-
+/*
   if(counter === 0) smooth_loss = loss;
   else smooth_loss = 0.99*smooth_loss + 0.01*loss;
-
+*/
   var t = '';
-  t += 'loss: ' + smooth_loss;
+  t += 'loss: ' + loss;
   t += '<br>'
   t += 'iteration: ' + counter;
   $("#report").html(t);
+}
+function digital(arr){
+  var total = 0;
+  for(var i=0; i<arr.length; i++){
+    total = total<<1;
+    if(arr[i]>0){
+      total+=arr[i]
+    }
+  }
+  return total;
 }
 function binary(number){
   var string = number.toString(2).padStart(9, "0");
@@ -82,9 +87,9 @@ function draw() {
       v.w = [].concat(binary(x), binary(y));
       var ix = ((W*y)+x)*4;
       var r = net.forward(v);
-      g.data[ix+0] = Math.floor(255*r.w[0]);
-      g.data[ix+1] = Math.floor(255*r.w[1]);
-      g.data[ix+2] = Math.floor(255*r.w[2]);
+      g.data[ix+0] = digital(r.w.slice(0, 8)));
+      g.data[ix+1] = digital(r.w.slice(8, 16)));
+      g.data[ix+2] = digital(r.w.slice(16, 24)));
       g.data[ix+3] = 255; // alpha...
     }
   }
