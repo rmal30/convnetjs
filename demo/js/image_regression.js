@@ -96,9 +96,9 @@ function draw() {
       v.w = [].concat(analog_input(x), analog_input(y));
       var ix = ((W*y)+x)*4;
       var r = net.forward(v);
-      g.data[ix+0] = digital(r.w.slice(0, 3)<<5);
-      g.data[ix+1] = digital(r.w.slice(3, 6)<<5);
-      g.data[ix+2] = digital(r.w.slice(6, 9)<<5);
+      g.data[ix+0] = digital(r.w.slice(0, 3))<<5;
+      g.data[ix+1] = digital(r.w.slice(3, 6))<<5;
+      g.data[ix+2] = digital(r.w.slice(6, 9))<<5;
       g.data[ix+3] = 255; // alpha...
     }
   }
