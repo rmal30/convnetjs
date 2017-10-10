@@ -5,9 +5,8 @@ var layer_defs, net, trainer;
 // create neural net
 var t = "layer_defs = [];\n\
 layer_defs.push({type:'input', out_sx:9, out_sy:1, out_depth:2}); // 2 inputs: x, y \n\
-layer_defs.push({type:'fc', num_neurons:18, activation:'relu'});\n\
 layer_defs.push({type:'fc', num_neurons:64, activation:'relu'});\n\
-layer_defs.push({type:'regression', num_neurons:24}); // 3 outputs: r,g,b \n\
+layer_defs.push({type:'regression', num_neurons:9}); // 3 outputs: r,g,b \n\
 \n\
 net = new convnetjs.Net();\n\
 net.makeLayers(layer_defs);\n\
@@ -36,7 +35,7 @@ function update(){
       var x = convnetjs.randi(0, W);
       var y = convnetjs.randi(0, H);
       var ix = ((W*y)+x)*4;
-      var r = [].concat(analog_output(p[ix]), analog_output(p[ix+1]), analog_output(p[ix+2])); // r g b
+      var r = [].concat(analog_output(p[ix]>>5), analog_output(p[ix+1]>>5), analog_output(p[ix+2]>>5)); // r g b
       v.w = [].concat(analog_input(x), analog_input(y));
       var stats = trainer.train(v, r);
       loss += stats.loss;
@@ -74,7 +73,7 @@ function analog_input(number){
 }
 
 function analog_output(number){
-  var string = number.toString(2).padStart(8, "0");
+  var string = number.toString(2).padStart(3, "0");
   var bits = [];
   for(var i=0; i<string.length; i++){
     bits[i] = string[i]*0.7+0.15;
@@ -97,9 +96,9 @@ function draw() {
       v.w = [].concat(analog_input(x), analog_input(y));
       var ix = ((W*y)+x)*4;
       var r = net.forward(v);
-      g.data[ix+0] = digital(r.w.slice(0, 8));
-      g.data[ix+1] = digital(r.w.slice(8, 16));
-      g.data[ix+2] = digital(r.w.slice(16, 24));
+      g.data[ix+0] = digital(r.w.slice(0, 3));
+      g.data[ix+1] = digital(r.w.slice(8, 11));
+      g.data[ix+2] = digital(r.w.slice(16, 19));
       g.data[ix+3] = 255; // alpha...
     }
   }
